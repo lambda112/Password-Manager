@@ -1,16 +1,24 @@
 from tkinter import *
+from tkinter import messagebox # Not a Class
 
 # Functions
 def create_text_file():
-    with open("password_manager.txt", "a") as f, open("password_manager_backup.txt", "a") as file:
-        f.writelines(f"{website_entry.get()} | {email_entry.get()} | {password_entry.get()}\n")
-        file.writelines(f"{website_entry.get()} | {email_entry.get()} | {password_entry.get()}\n")
-        website_entry.delete(0, END)
-        password_entry.delete(0, END)
+    is_okay = False
+    if len(website_entry.get()) == 0 or len(password_entry.get()) == 0:
+        messagebox.showwarning(title="empty fields", message="Please fill in all the required fields!")
 
-# ---------------------------- SAVE PASSWORD ------------------------------- #
+    else:
+        is_okay = messagebox.askokcancel(title=website_entry.get()\
+                ,message=f"Are these details correct?:\n{email_entry.get()}\
+                \n{password_entry.get()}\nSave details?")
 
-# ---------------------------- UI SETUP ------------------------------- #
+    if is_okay:
+        with open("password_manager.txt", "a") as f, open("password_manager_backup.txt", "a") as file:
+            f.writelines(f"{website_entry.get()} | {email_entry.get()} | {password_entry.get()}\n")
+            file.writelines(f"{website_entry.get()} | {email_entry.get()} | {password_entry.get()}\n")
+
+            website_entry.delete(0, END)
+            password_entry.delete(0, END)
 
 # Window
 window = Tk()
