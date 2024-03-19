@@ -1,5 +1,12 @@
 from tkinter import *
-# ---------------------------- PASSWORD GENERATOR ------------------------------- #
+
+# Functions
+def create_text_file():
+    with open("password_manager.txt", "a") as f, open("password_manager_backup.txt", "a") as file:
+        f.writelines(f"{website_entry.get()} | {email_entry.get()} | {password_entry.get()}\n")
+        file.writelines(f"{website_entry.get()} | {email_entry.get()} | {password_entry.get()}\n")
+        website_entry.delete(0, END)
+        password_entry.delete(0, END)
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 
@@ -9,6 +16,7 @@ from tkinter import *
 window = Tk()
 window.title("Password Manager")
 window.config(padx=50, pady=50)
+window.resizable(False, False)
 
 # Canvas
 lock_png = PhotoImage(file = "logo.png")
@@ -42,7 +50,7 @@ password_entry.grid(column = 1, row= 3, sticky="ew")
 password_button = Button(text = "Generate Password", border=0.45, width = 14)
 password_button.grid(column = 2, row = 3)
 
-add_button = Button(text = "Add", width=30, borderwidth=1, border=0.45)
+add_button = Button(text = "Add", width=30, borderwidth=1, border=0.45, command=create_text_file)
 add_button.grid(column = 1, row = 4, columnspan=2, sticky="ew")
 
 window.mainloop()
