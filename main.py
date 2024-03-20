@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import messagebox # Not a Class
+from pyperclip import copy
 from password import generate_password
 import sys, os
 
@@ -29,7 +30,9 @@ def get_path(filename):
 
 def create_password():
     password = generate_password()
+    password_entry.delete(0,END)
     password_entry.insert(0, password)
+    copy(password)
 
 # Window
 window = Tk()
