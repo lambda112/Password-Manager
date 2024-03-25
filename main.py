@@ -3,24 +3,46 @@ from tkinter import messagebox # Not a Class
 from pyperclip import copy
 from password import generate_password
 import sys, os
+import json
 
 # Functions
 def create_text_file():
+    website = website_entry.get()
+    email = email_entry.get()
+    password = password_entry.get()
+    new_data = {
+        website: {
+            "email": email,
+            "password": password,
+        }
+    }
+
+
     if len(website_entry.get()) == 0 or len(password_entry.get()) == 0:
         messagebox.showwarning(title="empty fields", message="Please fill in all the required fields!")
 
     else:
-        is_okay = messagebox.askokcancel(title=website_entry.get()\
-                ,message=f"Are these details correct?:\n{email_entry.get()}\
-                \n{password_entry.get()}\nSave details?")
+        try:
+            with open("password_manager.json", "r") as file:
+                # Reading old data
+                data = json.load(file)
 
-        if is_okay:
-            with open("password_manager.txt", "a") as f, open("password_manager_backup.txt", "a") as file:
-                f.writelines(f"{website_entry.get()} | {email_entry.get()} | {password_entry.get()}\n")
-                file.writelines(f"{website_entry.get()} | {email_entry.get()} | {password_entry.get()}\n")
+        except FileNotFoundError:
+            with open("password_manager.json", "w") as file:
+                json.dump(new_data, file, indent = 4)
+        
+        else:
+            # Updating old data with new data
+            data.update(new_data)
 
-                website_entry.delete(0, END)
-                password_entry.delete(0, END)
+            with open("password_manager.json", "w") as file:
+                # Saving updated data
+                json.dump(data, file, indent = 4)
+
+        finally:
+            website_entry.delete(0, END)
+            password_entry.delete(0, END)
+
 
 def get_path(filename):
     if hasattr(sys, "_MEIPASS"):
