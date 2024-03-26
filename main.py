@@ -17,7 +17,6 @@ def create_text_file():
         }
     }
 
-
     if len(website_entry.get()) == 0 or len(password_entry.get()) == 0:
         messagebox.showwarning(title="empty fields", message="Please fill in all the required fields!")
 
@@ -42,6 +41,24 @@ def create_text_file():
         finally:
             website_entry.delete(0, END)
             password_entry.delete(0, END)
+
+def find_password():
+    try:
+        with open("password_manager.json", "r") as file:
+            # Reading old data
+            data = json.load(file)
+
+    except FileNotFoundError:
+        messagebox.showerror(title="File Not Found", message="No data file located")
+    
+    else:
+        website = website_entry.get()
+        website_list = [web.lower() for web in list(data.keys())]
+
+        if website.lower() in website_list:
+            messagebox.showinfo(title = website, message= f'email: {data[website]["email"]}\npassword: {data[website]["password"]}')
+        else:
+            messagebox.showinfo(title = website, message= f"Website {website} not found")
 
 
 def get_path(filename):
@@ -91,10 +108,15 @@ password_entry = Entry(width = 20)
 password_entry.grid(column = 1, row= 3, sticky="ew")
 
 # Buttons
-password_button = Button(text = "Generate Password", border=0.45, width = 14, command=create_password)
+BACKGROUND = "lightgrey"
+
+password_button = Button(text = "Generate Password", borderwidth=0.1, border=0.1, width = 16, command=create_password, background = BACKGROUND)
 password_button.grid(column = 2, row = 3)
 
-add_button = Button(text = "Add", width=30, borderwidth=1, border=0.45, command=create_text_file)
+add_button = Button(text = "Add", width=30, borderwidth=0.1, border=0.1, command=create_text_file, background = BACKGROUND)
 add_button.grid(column = 1, row = 4, columnspan=2, sticky="ew")
+
+search_button = Button(text = "Search", width=16, borderwidth=0.1, border=0.1, command=find_password, background = BACKGROUND)
+search_button.grid(column = 2, row = 1, columnspan=2, sticky="ew")
 
 window.mainloop()
